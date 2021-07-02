@@ -12,11 +12,11 @@ class DataSource
   end
 
   def all
-    @conn.exec("SELECT * FROM memos;");
+    @conn.exec('SELECT * FROM memos')
   end
 
   def find(id)
-    @conn.exec("SELECT * FROM memos where id = '#{id}';")[0];
+    @conn.exec_params('SELECT * FROM memos where id = $1', [id]).first
   end
 
   def create(params)
@@ -24,19 +24,19 @@ class DataSource
     title = escape_html(params['title'])
     content = escape_html(params['content'])
 
-    @conn.exec("INSERT INTO memos VALUES ('#{id}', '#{title}', '#{content}');")
+    @conn.exec_params('INSERT INTO memos VALUES ($1, $2, $3)', [id, title, content])
   end
 
   def update(params)
-    id = params['id']
     title = escape_html(params['title'])
     content = escape_html(params['content'])
+    id = params['id']
 
-    @conn.exec("UPDATE memos SET title='#{title}', content='#{content}' WHERE id='#{id}';")
+    @conn.exec_params('UPDATE memos SET title=$1, content=$2 WHERE id=$3', [title, content, id])
   end
 
   def destroy(id)
-    @conn.exec("DELETE FROM memos WHERE id='#{id}';")
+    @conn.exec_params('DELETE FROM memos WHERE id=$1', [id])
   end
 
   private
