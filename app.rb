@@ -1,18 +1,20 @@
+# frozen_string_literal: true
+
 require 'sinatra'
 require 'sinatra/reloader'
 require 'json'
 
 class DataSource
-  DATA_SOURCE_PATH = './data.json'.freeze
+  DATA_SOURCE_PATH = './data.json'
 
   attr_accessor :data
 
   def initialize
-    @data = File.open(DATA_SOURCE_PATH) { |f| JSON.load(f) }
+    @data = File.open(DATA_SOURCE_PATH) { |f| JSON.parse(f) }
   end
 
   def find(id)
-    @data.find {|m| m['id'] == id }
+    @data.find { |m| m['id'] == id }
   end
 
   def create(params)
@@ -37,7 +39,7 @@ class DataSource
   end
 
   def destroy(id)
-    index = @data.find_index {|d| d['id'] == id }
+    index = @data.find_index { |d| d['id'] == id }
     @data.delete_at(index)
 
     json_dump
@@ -46,7 +48,7 @@ class DataSource
   private
 
   def json_dump
-    open(DATA_SOURCE_PATH, 'w') do |f|
+    File.open(DATA_SOURCE_PATH, 'w') do |f|
       JSON.dump(@data, f)
     end
   end
@@ -56,7 +58,6 @@ class DataSource
   end
 end
 
-
 helpers do
   def render_show_or_edit(template_symbol)
     memo = @data_source.find(params['id'])
@@ -64,7 +65,6 @@ helpers do
     erb template_symbol, locals: { memo: memo }
   end
 end
-
 
 before do
   @data_source = DataSource.new
