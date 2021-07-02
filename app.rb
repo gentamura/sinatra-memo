@@ -2,56 +2,44 @@
 
 require 'sinatra'
 require 'sinatra/reloader'
-require 'json'
+require 'pg'
 
 class DataSource
-  DATA_SOURCE_PATH = './data.json'
-
-  attr_accessor :data
+  attr_accessor :conn
 
   def initialize
-    @data = File.open(DATA_SOURCE_PATH) { |f| JSON.parse(f.read) }
+    @conn = PG.connect(dbname: 'memo_development')
+  end
+
+  def all
+    @conn.exec("SELECT * FROM memos;");
   end
 
   def find(id)
-    @data.find { |m| m['id'] == id }
+    @conn.exec("SELECT * FROM memos where id = '#{id}';")[0];
   end
 
   def create(params)
-    data = {
-      'id': Time.now.to_i.to_s,
-      'title': escape_html(params['title']),
-      'content': escape_html(params['content'])
-    }
+    id = Time.now.to_i.to_s
+    title = escape_html(params['title'])
+    content = escape_html(params['content'])
 
-    @data << data
-
-    json_dump
+    @conn.exec("INSERT INTO memos VALUES ('#{id}', '#{title}', '#{content}');")
   end
 
   def update(params)
-    data = find(params['id'])
+    id = params['id']
+    title = escape_html(params['title'])
+    content = escape_html(params['content'])
 
-    data['title'] = escape_html(params['title'])
-    data['content'] = escape_html(params['content'])
-
-    json_dump
+    @conn.exec("UPDATE memos SET title='#{title}', content='#{content}' WHERE id='#{id}';")
   end
 
   def destroy(id)
-    index = @data.find_index { |d| d['id'] == id }
-    @data.delete_at(index)
-
-    json_dump
+    @conn.exec("DELETE FROM memos WHERE id='#{id}';")
   end
 
   private
-
-  def json_dump
-    File.open(DATA_SOURCE_PATH, 'w') do |f|
-      JSON.dump(@data, f)
-    end
-  end
 
   def escape_html(str)
     Rack::Utils.escape_html(str)
@@ -71,7 +59,7 @@ before do
 end
 
 get '/' do
-  erb :index, locals: { memos: @data_source.data }
+  erb :index, locals: { memos: @data_source.all }
 end
 
 get '/memos/new' do

@@ -7,9 +7,11 @@
 bundle install --path vendor/bundle
 ```
 
-2. Start a web app.
+2. Execute `CREATE DATABASE memo_development;` in PostgreSQL on local environments.
+
+3. Start a web app.
 ```
 bundle exec ruby app.rb
 ```
 
-3. Check it out.
+4. Check it out.
