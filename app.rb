@@ -10,7 +10,7 @@ class DataSource
   attr_accessor :data
 
   def initialize
-    @data = File.open(DATA_SOURCE_PATH) { |f| JSON.parse(f) }
+    @data = File.open(DATA_SOURCE_PATH) { |f| JSON.parse(f.read) }
   end
 
   def find(id)
