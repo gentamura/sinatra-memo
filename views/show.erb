@@ -1,0 +1,16 @@
+<div>
+  <h2><%= memo['title'] %></h2>
+  <p><%= memo['content'] %></p>
+</div>
+
+<div>
+  <a href="/memos/<%= memo['id'] %>/edit">変更</a>
+
+  <div>
+    <form action="/memos/<%= memo['id'] %>" method="POST">
+      <input type="hidden" name="_method" value="DELETE">
+
+      <input type="submit" value="削除" />
+    </form>
+  </div>
+</div>

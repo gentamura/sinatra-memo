@@ -1,0 +1,19 @@
+<form action="/memos/<%= memo['id'] %>" method="POST">
+  <input type="hidden" name="_method" value="PUT">
+
+  <div>
+    <label for="title">title</label>
+    <input type="text" name="title" value="<%= memo['title'] %>" />
+  </div>
+
+  <div>
+    <label for="content">content</label>
+    <textarea name="content" rows="4">
+      <%= memo['content'] %>
+    </textarea>
+  </div>
+
+  <div>
+    <input type="submit" value="Submit" />
+  </div>
+</form>
