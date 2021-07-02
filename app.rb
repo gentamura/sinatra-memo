@@ -103,3 +103,7 @@ delete '/memos/:id' do
 
   redirect to('/')
 end
+
+not_found do
+  erb :not_found
+end
