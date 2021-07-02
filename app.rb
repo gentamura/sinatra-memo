@@ -83,7 +83,7 @@ get '/memos/:id/edit' do
   render_show_or_edit(:edit)
 end
 
-put '/memos/:id' do
+patch '/memos/:id' do
   @data_source.update(params)
 
   redirect to("/memos/#{params['id']}")
