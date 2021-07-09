@@ -10,5 +10,4 @@
 .yardoc
 /doc
 
-/.bundle
-/vendor/bundle
+data.json

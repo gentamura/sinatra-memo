@@ -20,45 +20,44 @@ class DataSource
   def create(params)
     data = {
       'id': Time.now.to_i.to_s,
-      'title': escape_html(params['title']),
-      'content': escape_html(params['content'])
+      'title': params['title'],
+      'content': params['content']
     }
 
     @data << data
 
-    json_dump
+    data_save
   end
 
   def update(params)
     data = find(params['id'])
 
-    data['title'] = escape_html(params['title'])
-    data['content'] = escape_html(params['content'])
+    data['title'] = params['title']
+    data['content'] = params['content']
 
-    json_dump
+    data_save
   end
 
   def destroy(id)
     index = @data.find_index { |d| d['id'] == id }
     @data.delete_at(index)
 
-    json_dump
+    data_save
   end
 
   private
 
-  def json_dump
+  def data_save
     File.open(DATA_SOURCE_PATH, 'w') do |f|
       JSON.dump(@data, f)
     end
   end
-
-  def escape_html(str)
-    Rack::Utils.escape_html(str)
-  end
 end
 
 helpers do
+  include Rack::Utils
+  alias_method :h, :escape_html
+
   def render_show_or_edit(template_symbol)
     memo = @data_source.find(params['id'])
 

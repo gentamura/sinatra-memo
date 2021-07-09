@@ -4,12 +4,24 @@
 
 1. Install gems.
 ```
-bundle install --path vendor/bundle
+bundle install
 ```
 
-2. Start a web app.
+2. Make `data.json`.
+
 ```
-bundle exec ruby app.rb
+[
+  {
+    "id": "1",
+    "title": "Title test",
+    "content": "Content test"
+  }
+]
 ```
 
-3. Check it out.
+3. Start a web app.
+```
+ruby app.rb
+```
+
+4. Check it out.
