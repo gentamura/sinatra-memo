@@ -4,14 +4,14 @@
 
 1. Install gems.
 ```
-bundle install --path vendor/bundle
+bundle install
 ```
 
 2. Execute `CREATE DATABASE memo_development;` in PostgreSQL on local environments.
 
 3. Start a web app.
 ```
-bundle exec ruby app.rb
+ruby app.rb
 ```
 
 4. Check it out.

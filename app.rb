@@ -21,8 +21,8 @@ class DataSource
 
   def create(params)
     id = Time.now.to_i.to_s
-    title = escape_html(params['title'])
-    content = escape_html(params['content'])
+    title = params['title']
+    content = params['content']
 
     @conn.exec_params('INSERT INTO memos VALUES ($1, $2, $3)', [id, title, content])
   end
@@ -38,15 +38,12 @@ class DataSource
   def destroy(id)
     @conn.exec_params('DELETE FROM memos WHERE id=$1', [id])
   end
-
-  private
-
-  def escape_html(str)
-    Rack::Utils.escape_html(str)
-  end
 end
 
 helpers do
+  include Rack::Utils
+  alias_method :h, :escape_html
+
   def render_show_or_edit(template_symbol)
     memo = @data_source.find(params['id'])
 
