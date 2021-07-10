@@ -7,7 +7,7 @@ require 'json'
 class DataSource
   DATA_SOURCE_PATH = './data.json'
 
-  attr_accessor :data
+  attr_reader :data
 
   def initialize
     @data = File.open(DATA_SOURCE_PATH) { |f| JSON.parse(f.read) }
@@ -26,7 +26,7 @@ class DataSource
 
     @data << data
 
-    data_save
+    save_data
   end
 
   def update(params)
@@ -35,19 +35,19 @@ class DataSource
     data['title'] = params['title']
     data['content'] = params['content']
 
-    data_save
+    save_data
   end
 
   def destroy(id)
     index = @data.find_index { |d| d['id'] == id }
     @data.delete_at(index)
 
-    data_save
+    save_data
   end
 
   private
 
-  def data_save
+  def save_data
     File.open(DATA_SOURCE_PATH, 'w') do |f|
       JSON.dump(@data, f)
     end
