@@ -1,0 +1,26 @@
+<div>
+  <h2><%= h(memo['title']) %></h2>
+  <p><pre><%= h(memo['content']) %></pre></p>
+</div>
+
+<div>
+  <a href="/memos/<%= memo['id'] %>/edit">変更</a>
+
+  <div>
+    <form action="/memos/<%= memo['id'] %>" method="POST">
+      <input type="hidden" name="_method" value="DELETE">
+
+      <input type="submit" value="削除" class="js-del-btn" />
+    </form>
+  </div>
+</div>
+
+<script>
+  var delEl = document.querySelector('.js-del-btn');
+
+  delEl.addEventListener('click', function(e) {
+    if (!window.confirm('本当に削除しますか？')) {
+      e.preventDefault();
+    }
+  });
+</script>

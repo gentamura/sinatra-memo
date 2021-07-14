@@ -1,0 +1,17 @@
+<form action="/memos/<%= memo['id'] %>" method="POST">
+  <input type="hidden" name="_method" value="PATCH">
+
+  <div>
+    <label for="title">タイトル</label>
+    <input type="text" name="title" value="<%= memo['title'] %>" />
+  </div>
+
+  <div>
+    <label for="content">コンテンツ</label>
+    <textarea name="content" rows="4"><%= memo['content'] %></textarea>
+  </div>
+
+  <div>
+    <input type="submit" value="更新する" />
+  </div>
+</form>
