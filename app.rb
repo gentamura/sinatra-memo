@@ -5,8 +5,6 @@ require 'sinatra/reloader'
 require 'pg'
 
 class DataSource
-  attr_accessor :conn
-
   def initialize
     @conn = PG.connect(dbname: 'memo_development')
   end
