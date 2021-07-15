@@ -26,8 +26,8 @@ class DataSource
   end
 
   def update(params)
-    title = escape_html(params['title'])
-    content = escape_html(params['content'])
+    title = params['title']
+    content = params['content']
     id = params['id']
 
     @conn.exec_params('UPDATE memos SET title=$1, content=$2 WHERE id=$3', [title, content, id])
