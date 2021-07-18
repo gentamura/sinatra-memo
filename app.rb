@@ -10,7 +10,7 @@ class DataSource
   end
 
   def all
-    @conn.exec('SELECT * FROM memos')
+    @conn.exec('SELECT * FROM memos ORDER BY id')
   end
 
   def find(id)
