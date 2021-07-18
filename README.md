@@ -7,21 +7,20 @@
 bundle install
 ```
 
-2. Make `data.json`.
+2. Install PostgreSQL if not exists.
+[PostgreSQL Downloads](https://www.postgresql.org/download/)
+
+3. Execute on local environments with PostgreSQL.
 
 ```
-[
-  {
-    "id": "1",
-    "title": "Title test",
-    "content": "Content test"
-  }
-]
+createdb memo_development
+psql -d 'memo_development' -c 'CREATE TABLE memos(id varchar(10), title varchar(50), content text);'
 ```
 
-3. Start a web app.
+
+4. Start a web app.
 ```
-ruby app.rb
+bundle exec ruby app.rb
 ```
 
-4. Check it out.
+5. Check it out.

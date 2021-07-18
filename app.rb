@@ -2,55 +2,39 @@
 
 require 'sinatra'
 require 'sinatra/reloader'
-require 'json'
+require 'pg'
 
 class DataSource
-  DATA_SOURCE_PATH = './data.json'
-
-  attr_reader :data
-
   def initialize
-    @data = File.open(DATA_SOURCE_PATH) { |f| JSON.parse(f.read) }
+    @conn = PG.connect(dbname: 'memo_development')
+  end
+
+  def all
+    @conn.exec('SELECT * FROM memos ORDER BY id')
   end
 
   def find(id)
-    @data.find { |m| m['id'] == id }
+    @conn.exec_params('SELECT * FROM memos where id = $1', [id]).first
   end
 
   def create(params)
-    data = {
-      'id': Time.now.to_i.to_s,
-      'title': params['title'],
-      'content': params['content']
-    }
+    id = Time.now.to_i.to_s
+    title = params['title']
+    content = params['content']
 
-    @data << data
-
-    save_data
+    @conn.exec_params('INSERT INTO memos VALUES ($1, $2, $3)', [id, title, content])
   end
 
   def update(params)
-    data = find(params['id'])
+    title = params['title']
+    content = params['content']
+    id = params['id']
 
-    data['title'] = params['title']
-    data['content'] = params['content']
-
-    save_data
+    @conn.exec_params('UPDATE memos SET title=$1, content=$2 WHERE id=$3', [title, content, id])
   end
 
   def destroy(id)
-    index = @data.find_index { |d| d['id'] == id }
-    @data.delete_at(index)
-
-    save_data
-  end
-
-  private
-
-  def save_data
-    File.open(DATA_SOURCE_PATH, 'w') do |f|
-      JSON.dump(@data, f)
-    end
+    @conn.exec_params('DELETE FROM memos WHERE id=$1', [id])
   end
 end
 
@@ -70,7 +54,7 @@ before do
 end
 
 get '/' do
-  erb :index, locals: { memos: @data_source.data }
+  erb :index, locals: { memos: @data_source.all }
 end
 
 get '/memos/new' do
